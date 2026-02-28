@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Liked Profiles</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./liked.js" defer></script>
+</head>
+<body>
+  <div id="liked-app">
+    <header class="app-header">
+      <h1 class="app-title">Liked Profiles</h1>
+      <div>
+        <a class="header-link" href="./index.html" aria-label="Return to swipe deck">Back to swipe</a>
+        <a class="header-link" href="./groupme.html" aria-label="Import profiles from GroupMe">Import from GroupMe</a>
+      </div>
+    </header>
+
+    <section class="liked-view" aria-live="polite" aria-label="Saved liked profiles">
+      <div class="liked-list" id="liked-list" hidden></div>
+      <p class="liked-empty" id="liked-empty">Loading liked profiles…</p>
+    </section>
+
+    <div class="secondary-actions">
+      <button class="export-button" id="download-likes" type="button" disabled aria-disabled="true">
+        Download JSON
+      </button>
+      <button class="reset-button" id="clear-likes" type="button" disabled aria-disabled="true">
+        Clear saved likes
+      </button>
+    </div>
+
+    <p class="ui-note" id="liked-note"></p>
+  </div>
+</body>
+</html>

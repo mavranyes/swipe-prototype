@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Import from GroupMe</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    #groupme-app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 640px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .token-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 6px;
+      background: rgba(29, 32, 48, 0.7);
+      color: #f9fafb;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 160ms ease, background 160ms ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(96, 165, 250, 0.6);
+      background: rgba(33, 41, 62, 0.9);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: "Monaco", "Courier New", monospace;
+      font-size: 0.85rem;
+    }
+
+    .help-text {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: -4px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(29, 32, 48, 0.7);
+      color: #f9fafb;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: rgba(96, 165, 250, 0.24);
+      border-color: rgba(147, 197, 253, 0.5);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: rgba(59, 130, 246, 0.5);
+      border-color: rgba(96, 165, 250, 0.8);
+    }
+
+    .groups-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .group-item {
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(29, 32, 48, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+
+    .group-item:hover {
+      background: rgba(33, 41, 62, 0.8);
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    .group-item input[type="radio"] {
+      cursor: pointer;
+    }
+
+    .group-info {
+      flex: 1;
+    }
+
+    .group-name {
+      font-weight: 600;
+    }
+
+    .group-members {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .merge-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(29, 32, 48, 0.5);
+    }
+
+    .merge-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .merge-option input[type="radio"] {
+      cursor: pointer;
+    }
+
+    .merge-option label {
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .results-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(29, 32, 48, 0.5);
+    }
+
+    .result-message {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .result-success {
+      color: #86efac;
+    }
+
+    .result-error {
+      color: #f87171;
+    }
+
+    .result-info {
+      color: #cbd5f5;
+    }
+
+    .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.3);
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+
+    .download-link:hover {
+      background: rgba(59, 130, 246, 0.5);
+      border-color: rgba(96, 165, 250, 0.8);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .cors-notice {
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 4px solid #fbbf24;
+      background: rgba(78, 35, 12, 0.4);
+      color: #fcd34d;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="groupme-app" aria-live="polite">
+    <header class="app-header">
+      <h1 class="app-title">Import from GroupMe</h1>
+      <div>
+        <a href="./index.html" class="header-link">Back to deck</a>
+      </div>
+    </header>
+
+    <div class="cors-notice">
+      ⚠ Note: This app must be served over HTTP (e.g., <code>python -m http.server</code>) to access the GroupMe API due to CORS restrictions.
+    </div>
+
+    <div class="token-form">
+      <div class="form-group">
+        <label for="token-input">GroupMe Personal Access Token</label>
+        <input 
+          id="token-input" 
+          type="password" 
+          placeholder="Paste your token here" 
+          aria-describedby="token-help"
+        />
+        <p class="help-text" id="token-help">
+          Get your token at <a href="https://dev.groupme.com/applications" target="_blank" style="color: #60a5fa;">dev.groupme.com/applications</a>. Login then click "Access Token" in the top right
+        </p>
+      </div>
+
+      <div class="button-group">
+        <button id="fetch-groups-btn" class="btn btn-primary">Fetch Groups</button>
+      </div>
+    </div>
+
+    <div id="groups-section" class="hidden">
+      <h2 style="margin-top: 0; font-size: 1.1rem;">Select a Group</h2>
+      <div id="groups-list" class="groups-container"></div>
+    </div>
+
+    <div id="merge-section" class="hidden">
+      <h2 style="margin-top: 0; font-size: 1.1rem;">Merge Strategy</h2>
+      <div class="merge-options">
+        <div class="merge-option">
+          <input 
+            id="merge-replace" 
+            type="radio" 
+            name="merge-strategy" 
+            value="replace" 
+            checked
+          />
+          <label for="merge-replace">
+            <strong>Replace</strong> existing profiles with this group
+          </label>
+        </div>
+        <div class="merge-option">
+          <input 
+            id="merge-append" 
+            type="radio" 
+            name="merge-strategy" 
+            value="append"
+          />
+          <label for="merge-append">
+            <strong>Append</strong> members from this group (skip duplicates)
+          </label>
+        </div>
+      </div>
+      <button id="import-btn" class="btn btn-primary" style="margin-top: 12px;">Import Members</button>
+    </div>
+
+    <div id="results-section" class="hidden results-area">
+      <div id="results-message" class="result-message"></div>
+      <div id="download-container"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./groupme.js"></script>
+</body>
+</html>
